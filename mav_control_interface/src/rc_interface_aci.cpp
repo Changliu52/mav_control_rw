@@ -25,6 +25,7 @@ RcInterfaceAci::RcInterfaceAci(const ros::NodeHandle& nh)
       nh_(nh),
       is_on_(false)
 {
+  ROS_INFO_ONCE("I'm in the aci rc interface");
   rc_sub_ = nh_.subscribe("rc", 1, &RcInterfaceAci::rcCallback, this);
 }
 
