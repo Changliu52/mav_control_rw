@@ -156,9 +156,10 @@ void MavRosCommandPublisher::publishCommand(
    //   internal_yaw_);
 
   std::cout << "command.roll: " << command.roll << "\t command pitch: "<< command.pitch << std::endl;
+  std::cout << "command.thrust.z: " << command.thrust.z() << '\n';
 
   // throttle must be between 0 and 1 (use min and max thrust to get there)
-  double thrust = (command.thrust.z()/2.27)/20.5; // scaling from data fitting
+  double thrust = (command.thrust.z()-3.99)/35.837; // scaling from data fitting
   //    (command.thrust.z() - thrust_min) / (thrust_max - thrust_min);
 
   command_msg.thrust = std::min(1.0, std::max(0.0, thrust));

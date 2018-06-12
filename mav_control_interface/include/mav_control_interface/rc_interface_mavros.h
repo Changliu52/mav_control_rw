@@ -30,8 +30,9 @@ namespace mav_control_interface {
 class RcInterfaceMavRos : public RcInterfaceBase {
  public:
   static constexpr float STICK_DEADZONE = 0.1;
-  static constexpr float STICK_MIN = 1000;
-  static constexpr float STICK_MAX = 2000;
+  static constexpr float STICK_MIN = 990;
+  static constexpr float STICK_MAX = 2016;
+  static constexpr float THROTTLE_DEADZONE = -0.8;
 
   RcInterfaceMavRos(const ros::NodeHandle& nh);
 

@@ -18,6 +18,7 @@
 */
 
 #include <mav_control_interface/rc_interface_mavros.h>
+#include <iostream>
 
 namespace mav_control_interface {
 
@@ -52,27 +53,38 @@ RcInterfaceMavRos::RcInterfaceMavRos(const ros::NodeHandle& nh)
 
       rc_data.push_back(norm_value);
     }
+    /*
+    std::cout << "rc_data = ";
+    for (std::vector<float>::const_iterator i = rc_data.begin(); i != rc_data.end(); ++i)
+                std::cout << *i << ' ';
+    std::cout << '\n';
+  */
 
     if (is_on_) {
       last_data_.right_up_down = rc_data[2];
       last_data_.right_side = rc_data[1];
       last_data_.left_up_down = rc_data[0];
       last_data_.left_side = rc_data[3];
-
+       
       if (rc_data[6] > 0.5){
         last_data_.control_interface = RcData::ControlInterface::ON;
+        //ROS_INFO("ControlInterface ON");
       }
       else{
         last_data_.control_interface = RcData::ControlInterface::OFF;
+        //ROS_INFO("ControlInterface OFF");
       }
       if (rc_data[4] <= -0.5){
         last_data_.control_mode = RcData::ControlMode::MANUAL;
+        //ROS_INFO("ControlMode MANUAL");
       }
       else if (rc_data[4] > -0.5 && rc_data[4] < 0.5){
         last_data_.control_mode = RcData::ControlMode::ALTITUDE_CONTROL;
+        //ROS_INFO("ControlMode ALTITUDE_CONTROL");
       }
       else{
         last_data_.control_mode = RcData::ControlMode::POSITION_CONTROL;
+        //ROS_INFO("ControlMode POSITION_CONTROL");
       }
       last_data_.wheel = 0.0;
     }
@@ -106,7 +118,7 @@ bool RcInterfaceMavRos::isActive() const
     return false;
   else if (std::abs(last_data_.right_up_down) > STICK_DEADZONE
       || std::abs(last_data_.right_side) > STICK_DEADZONE
-      || std::abs(last_data_.left_up_down) > STICK_DEADZONE
+      || last_data_.left_up_down > THROTTLE_DEADZONE
       || std::abs(last_data_.left_side) > STICK_DEADZONE) {
     return true;
   }

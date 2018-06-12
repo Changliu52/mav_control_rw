@@ -29,8 +29,8 @@ StateMachineDefinition::StateMachineDefinition(const ros::NodeHandle& nh, const 
                                                std::shared_ptr<PositionControllerInterface> controller)
     :nh_(nh),
      private_nh_(private_nh),
-     controller_(controller),
-     command_interface_(nh, private_nh)
+     controller_(controller), //non_linear mpc in our case
+     command_interface_(nh, private_nh) //this is autopilot in our case
 {
   current_reference_publisher_ = nh_.advertise<trajectory_msgs::MultiDOFJointTrajectory>(
       "command/current_reference", 1);
@@ -53,7 +53,7 @@ void StateMachineDefinition::PublishAttitudeCommand (
   double thrust_min = controller_->getThrustMin();
   double thrust_max = controller_->getThrustMax();
 
-  command_interface_.publishCommand(command, thrust_min, thrust_max);
+  command_interface_.publishCommand(command, thrust_min, thrust_max); //command_interface_ is an autopilot object
 }
 
 void StateMachineDefinition::PublishStateInfo(const std::string& info)
@@ -65,7 +65,7 @@ void StateMachineDefinition::PublishStateInfo(const std::string& info)
   }
 }
 
-void StateMachineDefinition::PublishCurrentReference()
+void StateMachineDefinition::PublishCurrentReference() //reference from rqt
 {
   ros::Time time_now = ros::Time::now();
   mav_msgs::EigenTrajectoryPoint current_reference;
