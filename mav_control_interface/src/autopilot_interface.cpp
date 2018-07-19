@@ -107,7 +107,7 @@ MavRosCommandPublisher::MavRosCommandPublisher(
     const ros::NodeHandle& nh, const ros::NodeHandle& private_nh)
     : BaseCommandPublisher(nh, private_nh) {
   command_publisher_ = nh_.advertise<mavros_msgs::AttitudeTarget>(
-      "mavros/setpoint_raw/attitude", 1); //topic should be mavros/setpoint_raw/attitude
+      "mavros/setpoint_raw/attitude", 1);
 
   // not actually just imu, mavros fills in orientation from fcu
   orientation_subscriber_ =
@@ -155,11 +155,16 @@ void MavRosCommandPublisher::publishCommand(
   //    command.roll, command.pitch,
    //   internal_yaw_);
 
-  //std::cout << "command.roll: " << command.roll << "\t command pitch: "<< command.pitch << "\tcommand.thrust.z: " << command.thrust.z() << '\n';
+  //std::cout << "thrust_max: " << thrust_max << '\n'; //thrust_max and thrust_min come from dynamic reconfigure
+  //std::Cout << "thrust_min: " << thrust_min << '\n';
+
+  std::cout << "command.roll: " << command.roll << "\t command pitch: "<< command.pitch << std::endl;
 
   // throttle must be between 0 and 1 (use min and max thrust to get there)
-  double thrust = (command.thrust.z()-1.668)/39.657; // scaling from data fitting
+  double thrust = (command.thrust.z()/2.27)/20.5; // scaling from data fitting
   //    (command.thrust.z() - thrust_min) / (thrust_max - thrust_min);
+
+  std::cout << "command.thrust: " << command.thrust.z() << std::endl;
 
   command_msg.thrust = std::min(1.0, std::max(0.0, thrust));
   command_publisher_.publish(command_msg);
