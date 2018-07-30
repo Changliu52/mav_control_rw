@@ -158,13 +158,13 @@ void MavRosCommandPublisher::publishCommand(
   //std::cout << "thrust_max: " << thrust_max << '\n'; //thrust_max and thrust_min come from dynamic reconfigure
   //std::Cout << "thrust_min: " << thrust_min << '\n';
 
-  std::cout << "command.roll: " << command.roll << "\t command pitch: "<< command.pitch << std::endl;
+  //std::cout << "command.roll: " << command.roll << "\t command pitch: "<< command.pitch << std::endl;
 
   // throttle must be between 0 and 1 (use min and max thrust to get there)
   double thrust = (command.thrust.z()/2.27)/20.5; // scaling from data fitting
   //    (command.thrust.z() - thrust_min) / (thrust_max - thrust_min);
 
-  std::cout << "command.thrust: " << command.thrust.z() << std::endl;
+  //std::cout << "command.thrust: " << command.thrust.z() << std::endl;
 
   command_msg.thrust = std::min(1.0, std::max(0.0, thrust));
   command_publisher_.publish(command_msg);
